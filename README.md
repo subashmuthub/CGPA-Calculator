@@ -2,6 +2,42 @@
 
 A full-stack web application for calculating and tracking academic CGPA with user authentication using MongoDB.
 
+## 📁 Project Structure
+
+```
+CGPA-Calculator/
+├── backend/                    # Node.js/Express backend
+│   ├── src/
+│   │   ├── middleware/        # Authentication middleware
+│   │   ├── models/           # MongoDB models (User, CGPARecord)
+│   │   ├── routes/           # API routes (auth, cgpa, debug)
+│   │   ├── utils/            # Utility functions (emailService)
+│   │   └── server.ts         # Main server file
+│   ├── tests/                # Backend test files
+│   ├── tsconfig.json         # TypeScript configuration
+│   └── package.json          # Backend dependencies
+│
+├── cgpa-calculator/          # React frontend
+│   ├── public/              # Static assets
+│   ├── src/
+│   │   ├── components/      # React components
+│   │   │   ├── auth/       # Authentication components
+│   │   │   ├── cgpa/       # CGPA calculator component
+│   │   │   ├── common/     # Reusable components
+│   │   │   ├── dashboard/  # Dashboard component
+│   │   │   └── demo/       # Demo components
+│   │   ├── context/        # React context (AuthContext)
+│   │   ├── __mocks__/      # Jest mocks
+│   │   ├── App.tsx         # Main App component
+│   │   └── index.tsx       # Entry point
+│   ├── tailwind.config.js  # Tailwind CSS config
+│   ├── tsconfig.json       # TypeScript configuration
+│   └── package.json        # Frontend dependencies
+│
+├── .gitignore              # Git ignore rules
+└── README.md               # Project documentation
+```
+
 ## Features
 
 ### Authentication System

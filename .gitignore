@@ -5,10 +5,13 @@ node_modules/
 
 # Testing
 /coverage
+*.test.js
+*.spec.js
 
 # Production
 /build
-/dist
+cgpa-calculator/build/
+backend/dist/
 
 # Environment
 .env
@@ -16,16 +19,20 @@ node_modules/
 .env.development.local
 .env.test.local
 .env.production.local
+backend/.env
 
 # Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+*.log
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
 .idea
 .DS_Store
 *.suo
@@ -40,3 +47,9 @@ lerna-debug.log*
 .npm
 .eslintcache
 .stylelintcache
+.temp
+.tmp
+
+# OS
+Thumbs.db
+.DS_Store

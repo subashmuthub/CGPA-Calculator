@@ -2,6 +2,8 @@
 
 A full-stack web application for calculating and tracking academic CGPA with user authentication using MongoDB.
 
+**Tech Stack**: React (JavaScript), Node.js/Express (JavaScript), MongoDB, Tailwind CSS
+
 ## 📁 Project Structure
 
 ```
@@ -12,9 +14,9 @@ CGPA-Calculator/
 │   │   ├── models/           # MongoDB models (User, CGPARecord)
 │   │   ├── routes/           # API routes (auth, cgpa, debug)
 │   │   ├── utils/            # Utility functions (emailService)
-│   │   └── server.ts         # Main server file
+│   │   └── server.js         # Main server file
 │   ├── tests/                # Backend test files
-│   ├── tsconfig.json         # TypeScript configuration
+│   ├── nodemon.json          # Nodemon configuration
 │   └── package.json          # Backend dependencies
 │
 ├── cgpa-calculator/          # React frontend
@@ -28,13 +30,14 @@ CGPA-Calculator/
 │   │   │   └── demo/       # Demo components
 │   │   ├── context/        # React context (AuthContext)
 │   │   ├── __mocks__/      # Jest mocks
-│   │   ├── App.tsx         # Main App component
-│   │   └── index.tsx       # Entry point
+│   │   ├── App.jsx         # Main App component
+│   │   └── index.jsx       # Entry point
 │   ├── tailwind.config.js  # Tailwind CSS config
-│   ├── tsconfig.json       # TypeScript configuration
+│   ├── jsconfig.json       # JavaScript configuration
 │   └── package.json        # Frontend dependencies
 │
 ├── .gitignore              # Git ignore rules
+├── TYPESCRIPT_TO_JAVASCRIPT_CONVERSION.md  # Conversion documentation
 └── README.md               # Project documentation
 ```
 
@@ -62,22 +65,28 @@ CGPA-Calculator/
 ## Technology Stack
 
 ### Frontend
-- **React 18**: Modern React with TypeScript
+- **React 18**: Modern React with JavaScript (JSX)
 - **React Router**: Client-side routing
 - **Axios**: HTTP client for API communication
 - **React Toastify**: User notifications
+- **Tailwind CSS**: Utility-first CSS framework
 - **CSS3**: Custom styling with gradients and animations
 
 ### Backend
-- **Node.js**: Runtime environment
+- **Node.js**: Runtime environment with ES Modules
 - **Express.js**: Web application framework
-- **TypeScript**: Type-safe JavaScript
+- **JavaScript (ES6+)**: Modern JavaScript with async/await
 - **MongoDB**: NoSQL database
 - **Mongoose**: MongoDB object modeling
 - **JWT**: JSON Web Tokens for authentication
 - **Bcrypt**: Password hashing
 - **Nodemailer**: Email sending functionality
 - **Express Validator**: Input validation and sanitization
+
+### Testing
+- **Jest**: JavaScript testing framework
+- **React Testing Library**: React component testing
+- **ESLint**: Code quality and best practices
 
 ## Prerequisites
 

@@ -15,6 +15,8 @@ const Dashboard = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedRecord, setSelectedRecord] = useState(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
 
   useEffect(() => {
     fetchCGPARecords();
@@ -45,10 +47,20 @@ const Dashboard = () => {
   };
 
   const getGradeColor = (gpa) => {
-    if (gpa >= 3.5) return '#27ae60';
-    if (gpa >= 3.0) return '#f39c12';
-    if (gpa >= 2.5) return '#e67e22';
+    if (gpa >= 8.5) return '#27ae60';
+    if (gpa >= 7.0) return '#f39c12';
+    if (gpa >= 6.0) return '#e67e22';
     return '#e74c3c';
+  };
+
+  const handleRecordClick = (record) => {
+    setSelectedRecord(record);
+    setShowDetailModal(true);
+  };
+
+  const closeDetailModal = () => {
+    setShowDetailModal(false);
+    setSelectedRecord(null);
   };
 
   if (isLoading) {
@@ -76,7 +88,7 @@ const Dashboard = () => {
               >
                 {summary.currentCGPA.toFixed(2)}
               </div>
-              <p>Out of 4.00</p>
+              <p>Out of 10.00</p>
             </div>
           </div>
 
@@ -97,6 +109,23 @@ const Dashboard = () => {
               <p>Records maintained</p>
             </div>
           </div>
+
+          {summary.totalRecords > 1 && (
+            <div className="summary-card">
+              <div className="card-icon">📈</div>
+              <div className="card-content">
+                <h3>GPA Calculation</h3>
+                <div className="card-value">
+                  {(() => {
+                    const totalPoints = records.reduce((sum, r) => sum + (r.semesterGPA * r.totalCredits), 0);
+                    const totalCredits = records.reduce((sum, r) => sum + r.totalCredits, 0);
+                    return totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : '0.00';
+                  })()}
+                </div>
+                <p>Overall GPA</p>
+              </div>
+            </div>
+          )}
 
           <div className="summary-card action-card">
             <div className="card-icon">➕</div>
@@ -138,7 +167,13 @@ const Dashboard = () => {
           ) : (
             <div className="records-grid">
               {records.map((record) => (
-                <div key={record._id} className="record-card">
+                <div 
+                  key={record._id} 
+                  className="record-card clickable-card"
+                  onClick={() => handleRecordClick(record)}
+                  role="button"
+                  tabIndex={0}
+                >
                   <div className="record-header">
                     <h4>{record.semester} {record.year}</h4>
                     <div className="record-date">
@@ -217,6 +252,75 @@ const Dashboard = () => {
                   <p>Update your records</p>
                 </div>
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* Detail Modal */}
+        {showDetailModal && selectedRecord && (
+          <div className="modal-overlay" onClick={closeDetailModal}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2>{selectedRecord.semester} {selectedRecord.year} - Full Details</h2>
+                <button className="close-button" onClick={closeDetailModal}>✕</button>
+              </div>
+              
+              <div className="modal-body">
+                <div className="detail-summary">
+                  <div className="detail-stat">
+                    <span className="detail-label">Semester GPA</span>
+                    <span 
+                      className="detail-value"
+                      style={{ color: getGradeColor(selectedRecord.semesterGPA) }}
+                    >
+                      {selectedRecord.semesterGPA.toFixed(2)} / 10.00
+                    </span>
+                  </div>
+                  <div className="detail-stat">
+                    <span className="detail-label">Cumulative CGPA</span>
+                    <span 
+                      className="detail-value"
+                      style={{ color: getGradeColor(selectedRecord.cumulativeCGPA) }}
+                    >
+                      {selectedRecord.cumulativeCGPA.toFixed(2)} / 10.00
+                    </span>
+                  </div>
+                  <div className="detail-stat">
+                    <span className="detail-label">Total Credits</span>
+                    <span className="detail-value">
+                      {selectedRecord.totalCredits}
+                    </span>
+                  </div>
+                  <div className="detail-stat">
+                    <span className="detail-label">Date Added</span>
+                    <span className="detail-value">
+                      {formatDate(selectedRecord.createdAt)}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="detail-courses">
+                  <h3>All Courses ({selectedRecord.courses.length})</h3>
+                  <div className="courses-table">
+                    <div className="table-header">
+                      <span>Course Code</span>
+                      <span>Course Name</span>
+                      <span>Credits</span>
+                      <span>Grade</span>
+                      <span>Grade Point</span>
+                    </div>
+                    {selectedRecord.courses.map((course, index) => (
+                      <div key={index} className="table-row">
+                        <span className="course-code-cell">{course.courseCode}</span>
+                        <span className="course-name-cell">{course.courseName}</span>
+                        <span className="credits-cell">{course.credits}</span>
+                        <span className="grade-cell">{course.grade}</span>
+                        <span className="gradepoint-cell">{course.gradePoint.toFixed(2)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}

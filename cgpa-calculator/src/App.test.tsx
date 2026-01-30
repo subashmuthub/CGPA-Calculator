@@ -1,8 +1,6 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { render, screen, within } from '@testing-library/react';
 import App from './App';
-import { AuthProvider } from './context/AuthContext';
 import '@testing-library/jest-dom';
 
 // Mock all the components to avoid complex dependency issues
@@ -84,12 +82,12 @@ describe('App Component', () => {
   });
 
   test('has correct CSS classes applied', () => {
-    render(<App />);
+    const { container } = render(<App />);
     
-    const mainContent = document.querySelector('main');
+    const mainContent = within(container).getByRole('main');
     expect(mainContent).toHaveClass('pt-16');
     
-    const appDiv = document.querySelector('.min-h-screen');
+    const appDiv = container.querySelector('.min-h-screen');
     expect(appDiv).toHaveClass('bg-gradient-to-br', 'from-blue-50', 'via-indigo-50', 'to-purple-50');
   });
 

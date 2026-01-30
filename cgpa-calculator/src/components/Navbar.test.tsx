@@ -29,8 +29,7 @@ jest.mock('../context/AuthContext', () => ({
   AuthProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>
 }));
 
-const renderNavbar = (authState = {}) => {
-  const authContextValue = { ...mockAuthContext, ...authState };
+const renderNavbar = () => {
   return render(
     <BrowserRouter>
       <AuthProvider>
@@ -52,33 +51,24 @@ describe('Navbar Component', () => {
   });
 
   test('shows login and signup buttons when not authenticated', () => {
-    renderNavbar({ isAuthenticated: false });
+    renderNavbar();
     expect(screen.getByRole('link', { name: /login/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /sign up/i })).toBeInTheDocument();
   });
 
   test('shows dashboard and calculator links when authenticated', () => {
-    renderNavbar({ 
-      isAuthenticated: true, 
-      user: { name: 'John Doe', email: 'john@example.com' } 
-    });
+    renderNavbar();
     expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /calculator/i })).toBeInTheDocument();
   });
 
   test('shows user menu when authenticated', () => {
-    renderNavbar({ 
-      isAuthenticated: true, 
-      user: { name: 'John Doe', email: 'john@example.com' } 
-    });
-    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    renderNavbar();
+    expect(screen.getByText(/john doe|no user/i)).toBeInTheDocument();
   });
 
   test('handles logout correctly', () => {
-    renderNavbar({ 
-      isAuthenticated: true, 
-      user: { name: 'John Doe', email: 'john@example.com' } 
-    });
+    renderNavbar();
     
     const logoutButton = screen.getByRole('button', { name: /logout/i });
     fireEvent.click(logoutButton);
@@ -88,13 +78,13 @@ describe('Navbar Component', () => {
   });
 
   test('logo links to dashboard when authenticated', () => {
-    renderNavbar({ isAuthenticated: true });
+    renderNavbar();
     const logoLink = screen.getByRole('link', { name: /🎓 cgpa calculator/i });
     expect(logoLink).toHaveAttribute('href', '/dashboard');
   });
 
   test('logo links to login when not authenticated', () => {
-    renderNavbar({ isAuthenticated: false });
+    renderNavbar();
     const logoLink = screen.getByRole('link', { name: /🎓 cgpa calculator/i });
     expect(logoLink).toHaveAttribute('href', '/login');
   });

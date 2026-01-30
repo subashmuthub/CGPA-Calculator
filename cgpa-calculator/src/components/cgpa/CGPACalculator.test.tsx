@@ -1,9 +1,8 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import CGPACalculator from './CGPACalculator';
 import { AuthProvider } from '../../context/AuthContext';
-import axios from 'axios';
 import '@testing-library/jest-dom';
 
 // Mock axios
@@ -29,8 +28,7 @@ jest.mock('../../context/AuthContext', () => ({
   }
 }));
 
-const renderCGPACalculator = (authState = {}) => {
-  const authContextValue = { ...mockAuthContext, ...authState };
+const renderCGPACalculator = () => {
   return render(
     <BrowserRouter>
       <AuthProvider>
@@ -66,9 +64,7 @@ describe('CGPACalculator Component', () => {
   });
 
   test('renders calculator title after loading', async () => {
-    await act(async () => {
-      renderCGPACalculator();
-    });
+    renderCGPACalculator();
     
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
@@ -78,9 +74,7 @@ describe('CGPACalculator Component', () => {
   });
 
   test('renders add course button', async () => {
-    await act(async () => {
-      renderCGPACalculator();
-    });
+    renderCGPACalculator();
     
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
@@ -90,9 +84,7 @@ describe('CGPACalculator Component', () => {
   });
 
   test('adds a new course when add button is clicked', async () => {
-    await act(async () => {
-      renderCGPACalculator();
-    });
+    renderCGPACalculator();
     
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
@@ -100,18 +92,14 @@ describe('CGPACalculator Component', () => {
     
     const addButton = screen.getByRole('button', { name: /add course/i });
     
-    await act(async () => {
-      fireEvent.click(addButton);
-    });
+    fireEvent.click(addButton);
     
     const courseNameInputs = screen.getAllByPlaceholderText(/data structures/i);
     expect(courseNameInputs.length).toBeGreaterThan(0);
   });
 
   test('calculates GPA correctly', async () => {
-    await act(async () => {
-      renderCGPACalculator();
-    });
+    renderCGPACalculator();
     
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
@@ -123,9 +111,7 @@ describe('CGPACalculator Component', () => {
   });
 
   test('removes course when delete button is clicked', async () => {
-    await act(async () => {
-      renderCGPACalculator();
-    });
+    renderCGPACalculator();
     
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
@@ -133,9 +119,7 @@ describe('CGPACalculator Component', () => {
     
     // Add a course first
     const addButton = screen.getByRole('button', { name: /add course/i });
-    await act(async () => {
-      fireEvent.click(addButton);
-    });
+    fireEvent.click(addButton);
     
     // Now there should be a remove button
     const removeButtons = screen.getAllByTitle(/remove course/i);
@@ -151,9 +135,7 @@ describe('CGPACalculator Component', () => {
       }
     });
     
-    await act(async () => {
-      renderCGPACalculator();
-    });
+    renderCGPACalculator();
     
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
@@ -161,9 +143,7 @@ describe('CGPACalculator Component', () => {
     
     const saveButton = screen.getByRole('button', { name: /save record/i });
     
-    await act(async () => {
-      fireEvent.click(saveButton);
-    });
+    fireEvent.click(saveButton);
     
     // Should navigate to dashboard after successful save
     await waitFor(() => {
@@ -172,9 +152,7 @@ describe('CGPACalculator Component', () => {
   });
 
   test('resets form when reset button is clicked', async () => {
-    await act(async () => {
-      renderCGPACalculator();
-    });
+    renderCGPACalculator();
     
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
@@ -182,15 +160,11 @@ describe('CGPACalculator Component', () => {
     
     // Add a course
     const addButton = screen.getByRole('button', { name: /add course/i });
-    await act(async () => {
-      fireEvent.click(addButton);
-    });
+    fireEvent.click(addButton);
     
     // Reset form
     const resetButton = screen.getByRole('button', { name: /reset/i });
-    await act(async () => {
-      fireEvent.click(resetButton);
-    });
+    fireEvent.click(resetButton);
     
     // After reset, should only have one course
     const courseInputs = screen.getAllByPlaceholderText(/data structures/i);
@@ -198,9 +172,7 @@ describe('CGPACalculator Component', () => {
   });
 
   test('displays calculated GPA', async () => {
-    await act(async () => {
-      renderCGPACalculator();
-    });
+    renderCGPACalculator();
     
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();

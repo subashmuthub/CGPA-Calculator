@@ -5,12 +5,12 @@ import { AuthProvider, useAuth } from './AuthContext';
 import '@testing-library/jest-dom';
 
 // Mock axios
-const mockAxios = {
+const mockAxios: any = {
   post: jest.fn(),
   get: jest.fn(),
   defaults: {
     headers: {
-      common: {}
+      common: {} as Record<string, string>
     }
   }
 };
@@ -28,15 +28,15 @@ Object.defineProperty(window, 'localStorage', {
 
 // Test component to access auth context
 const TestComponent = () => {
-  const { user, isAuthenticated, isLoading, login, logout, signup } = useAuth();
+  const { user, isAuthenticated, isLoading, login, logout, register } = useAuth();
   return (
     <div>
-      <div data-testid="user">{user?.name || 'No user'}</div>
+      <div data-testid="user">{user?.firstName || 'No user'}</div>
       <div data-testid="authenticated">{isAuthenticated.toString()}</div>
       <div data-testid="loading">{isLoading.toString()}</div>
       <button onClick={() => login('test@example.com', 'password')}>Login</button>
       <button onClick={logout}>Logout</button>
-      <button onClick={() => signup('John Doe', 'test@example.com', 'password')}>Signup</button>
+      <button onClick={() => register('John', 'Doe', 'test@example.com', 'password')}>Signup</button>
     </div>
   );
 };
@@ -77,7 +77,7 @@ describe('AuthContext', () => {
     const mockResponse = {
       data: {
         token: 'new-token',
-        user: { name: 'John Doe', email: 'test@example.com' }
+        user: { firstName: 'John', lastName: 'Doe', email: 'test@example.com', id: '1', isEmailVerified: true }
       }
     };
     mockAxios.post.mockResolvedValue(mockResponse);
@@ -91,9 +91,9 @@ describe('AuthContext', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByTestId('user')).toHaveTextContent('John Doe');
-      expect(screen.getByTestId('authenticated')).toHaveTextContent('true');
+      expect(screen.getByTestId('user')).toHaveTextContent('John');
     });
+    expect(screen.getByTestId('authenticated')).toHaveTextContent('true');
 
     expect(mockLocalStorage.setItem).toHaveBeenCalledWith('token', 'new-token');
     expect(mockAxios.defaults.headers.common['Authorization']).toBe('Bearer new-token');
@@ -112,15 +112,15 @@ describe('AuthContext', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('authenticated')).toHaveTextContent('false');
-      expect(screen.getByTestId('user')).toHaveTextContent('No user');
     });
+    expect(screen.getByTestId('user')).toHaveTextContent('No user');
   });
 
   test('successful signup updates auth state', async () => {
     const mockResponse = {
       data: {
         token: 'signup-token',
-        user: { name: 'John Doe', email: 'test@example.com' }
+        user: { firstName: 'John', lastName: 'Doe', email: 'test@example.com', id: '1', isEmailVerified: false }
       }
     };
     mockAxios.post.mockResolvedValue(mockResponse);
@@ -134,9 +134,9 @@ describe('AuthContext', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByTestId('user')).toHaveTextContent('John Doe');
-      expect(screen.getByTestId('authenticated')).toHaveTextContent('true');
+      expect(screen.getByTestId('user')).toHaveTextContent('John');
     });
+    expect(screen.getByTestId('authenticated')).toHaveTextContent('true');
 
     expect(mockLocalStorage.setItem).toHaveBeenCalledWith('token', 'signup-token');
   });
@@ -146,7 +146,7 @@ describe('AuthContext', () => {
     const mockResponse = {
       data: {
         token: 'auth-token',
-        user: { name: 'John Doe', email: 'test@example.com' }
+        user: { firstName: 'John', lastName: 'Doe', email: 'test@example.com', id: '1', isEmailVerified: true }
       }
     };
     mockAxios.post.mockResolvedValue(mockResponse);
@@ -198,7 +198,7 @@ describe('AuthContext', () => {
       resolveLogin({
         data: {
           token: 'token',
-          user: { name: 'John', email: 'john@example.com' }
+          user: { firstName: 'John', lastName: 'Doe', email: 'john@example.com', id: '1', isEmailVerified: true }
         }
       });
     });

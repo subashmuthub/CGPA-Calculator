@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import { AuthProvider } from '../../context/AuthContext';
@@ -24,8 +24,7 @@ jest.mock('../../context/AuthContext', () => ({
   AuthProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>
 }));
 
-const renderDashboard = (authState = {}) => {
-  const authContextValue = { ...mockAuthContext, ...authState };
+const renderDashboard = () => {
   return render(
     <BrowserRouter>
       <AuthProvider>

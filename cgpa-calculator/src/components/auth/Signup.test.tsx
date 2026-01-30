@@ -29,8 +29,7 @@ jest.mock('../../context/AuthContext', () => ({
   AuthProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>
 }));
 
-const renderSignup = (authState = {}) => {
-  const authContextValue = { ...mockAuthContext, ...authState };
+const renderSignup = () => {
   return render(
     <BrowserRouter>
       <AuthProvider>
@@ -81,9 +80,9 @@ describe('Signup Component', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/full name is required/i)).toBeInTheDocument();
-      expect(screen.getByText(/email is required/i)).toBeInTheDocument();
-      expect(screen.getByText(/password is required/i)).toBeInTheDocument();
     });
+    expect(screen.getByText(/email is required/i)).toBeInTheDocument();
+    expect(screen.getByText(/password is required/i)).toBeInTheDocument();
   });
 
   test('shows validation error for invalid email', async () => {
@@ -129,7 +128,8 @@ describe('Signup Component', () => {
 
   test('calls signup function with correct data', async () => {
     const mockSignup = jest.fn().mockResolvedValue(undefined);
-    renderSignup({ signup: mockSignup });
+    mockAuthContext.signup = mockSignup;
+    renderSignup();
 
     const nameInput = screen.getByLabelText(/full name/i);
     const emailInput = screen.getByLabelText(/email address/i);
@@ -149,12 +149,16 @@ describe('Signup Component', () => {
   });
 
   test('shows loading state during signup', () => {
-    renderSignup({ isLoading: true });
+    mockAuthContext.isLoading = true;
+    renderSignup();
+    mockAuthContext.isLoading = false;
     expect(screen.getByText(/creating account/i)).toBeInTheDocument();
   });
 
   test('redirects when already authenticated', () => {
-    renderSignup({ isAuthenticated: true });
+    mockAuthContext.isAuthenticated = true;
+    renderSignup();
+    mockAuthContext.isAuthenticated = false;
     expect(mockNavigate).toHaveBeenCalledWith('/dashboard', { replace: true });
   });
 

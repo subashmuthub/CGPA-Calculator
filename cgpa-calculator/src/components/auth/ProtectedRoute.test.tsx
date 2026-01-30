@@ -24,7 +24,6 @@ jest.mock('../../context/AuthContext', () => ({
 const TestComponent = () => <div>Protected Content</div>;
 
 const renderProtectedRoute = (authState = {}) => {
-  const authContextValue = { ...mockAuthContext, ...authState };
   return render(
     <BrowserRouter>
       <AuthProvider>

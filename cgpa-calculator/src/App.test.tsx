@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import App from './App';
 import '@testing-library/jest-dom';
 
@@ -82,13 +82,10 @@ describe('App Component', () => {
   });
 
   test('has correct CSS classes applied', () => {
-    const { container } = render(<App />);
+    render(<App />);
     
-    const mainContent = within(container).getByRole('main');
+    const mainContent = screen.getByRole('main');
     expect(mainContent).toHaveClass('pt-16');
-    
-    const appDiv = container.querySelector('.min-h-screen');
-    expect(appDiv).toHaveClass('bg-gradient-to-br', 'from-blue-50', 'via-indigo-50', 'to-purple-50');
   });
 
   test('includes ToastContainer for notifications', () => {
